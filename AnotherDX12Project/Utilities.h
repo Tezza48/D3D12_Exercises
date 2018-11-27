@@ -10,7 +10,7 @@
 #include <exception>
 #include <cassert>
 
-#if DEBUG || _DEBUG
+#if DEBUG || _DEBUG && 0
 #define ThrowIfFailed(hr)\
 	if (FAILED(hr))											\
 	{ 													\
@@ -18,9 +18,8 @@
 		std::wstring text = L"ERROR: ";							\
 		text += err.ErrorMessage();								\
 		text += __FILEW__;									\
-		text += L" " + std::to_wstring(__LINE__) + L".\n";						\
+		text += L" " + std::to_wstring(__LINE__) + L".\n";				\
 		OutputDebugString(text.c_str()); 							\
-		/*throw std::exception((char *)text.c_str());					*/\
 		throw std::exception();									\
 	}
 #else

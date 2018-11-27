@@ -88,6 +88,9 @@ bool D3DApp::Initialize()
 {
 	if (!InitMainWindow()) return false;
 	if (!InitDirect3D()) return false;
+
+	OnResize();
+
 	return true;
 }
 
@@ -299,9 +302,12 @@ bool D3DApp::InitDirect3D()
 	ComPtr<ID3D12Debug3> debugController;
 	ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
 	debugController->EnableDebugLayer();
-#endif // DEBUG || _DEBUG
+
+	ThrowIfFailed(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG ,IID_PPV_ARGS(&mdxgiFactory)));
+#else
 
 	ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&mdxgiFactory)));
+#endif // DEBUG || _DEBUG
 
 	// try to create hardware device
 	HRESULT hardwareResult = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&md3dDevice));
@@ -380,6 +386,7 @@ void D3DApp::CreateSwapChain()
 	sd.BufferDesc.Height = mClientHeight;
 	sd.BufferDesc.RefreshRate.Numerator = 1;
 	sd.BufferDesc.RefreshRate.Denominator = 60;
+	sd.BufferDesc.Format = mBackBufferFormat;
 	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	sd.SampleDesc.Count = m4xMsaaState ? 4 : 1;

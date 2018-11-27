@@ -32,7 +32,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	catch (std::exception & e)
 	{
-		MessageBox(nullptr, (wchar_t *)e.what(), L"HR Failed", MB_OK);
+		MessageBox(nullptr, L"Error Message in Debug Stream", L"HR Failed", MB_OK);
 		return 0;
 	}
 }
