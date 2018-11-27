@@ -30,9 +30,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		
 		return theApp.Run();
 	}
-	catch (std::exception & e)
+	catch (DxException & e)
 	{
-		MessageBox(nullptr, L"Error Message in Debug Stream", L"HR Failed", MB_OK);
+		MessageBox(nullptr, e.ToString().c_str(), L"HR Failed", MB_OK);
 		return 0;
 	}
 }

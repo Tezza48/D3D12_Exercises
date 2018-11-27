@@ -10,17 +10,25 @@
 #include <exception>
 #include <cassert>
 
-#if DEBUG || _DEBUG && 0
-#define ThrowIfFailed(hr)\
-	if (FAILED(hr))											\
-	{ 													\
-		_com_error err(hr); 									\
-		std::wstring text = L"ERROR: ";							\
-		text += err.ErrorMessage();								\
-		text += __FILEW__;									\
-		text += L" " + std::to_wstring(__LINE__) + L".\n";				\
-		OutputDebugString(text.c_str()); 							\
-		throw std::exception();									\
+class DxException
+{
+public:
+	DxException() = default;
+	DxException(HRESULT hr, const std::wstring & functionName, const std::wstring & fileName, int lineNumber);
+
+	std::wstring ToString() const;
+
+	HRESULT ErrorCode = S_OK;
+	std::wstring FunctionName;
+	std::wstring Filename;
+	int LineNumber = -1;
+};
+
+#if DEBUG || _DEBUG
+#define ThrowIfFailed(x)										    \
+	{ 													    \
+		HRESULT hr__ = (x);									    \
+		if(FAILED(hr__)) { throw DxException(hr__, L#x, __FILEW__, __LINE__);}	    \
 	}
 #else
 #define ThrowIfFailed(x) x
